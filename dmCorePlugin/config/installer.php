@@ -9,6 +9,8 @@ require_once(sfConfig::get('dm_core_dir').'/lib/basic/dmString.php');
 require_once(sfConfig::get('dm_core_dir').'/lib/os/dmOs.php');
 require_once(sfConfig::get('dm_core_dir').'/lib/project/dmProject.php');
 require_once(sfConfig::get('dm_core_dir').'/lib/task/dmServerCheckTask.class.php');
+require_once(sfConfig::get('dm_core_dir').'/lib/task/dmFilesystem.class.php');
+$this->filesystem = dmFilesystem::fromSfFilesystem($this->filesystem);
 
 $this->logBlock('Diem '.DIEM_VERSION.' installer', 'INFO_LARGE');
 
