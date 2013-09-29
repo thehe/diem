@@ -9,8 +9,6 @@ require_once(sfConfig::get('dm_core_dir').'/lib/basic/dmString.php');
 require_once(sfConfig::get('dm_core_dir').'/lib/os/dmOs.php');
 require_once(sfConfig::get('dm_core_dir').'/lib/project/dmProject.php');
 require_once(sfConfig::get('dm_core_dir').'/lib/task/dmServerCheckTask.class.php');
-require_once(sfConfig::get('dm_core_dir').'/lib/task/dmFilesystem.class.php');
-$this->filesystem = dmFilesystem::fromSfFilesystem($this->filesystem);
 
 $this->logBlock('Diem '.DIEM_VERSION.' installer', 'INFO_LARGE');
 
@@ -204,17 +202,9 @@ $this->filesystem->mirror(
   array('override' => true)
 );
 
-$diemCoreStarter = dmOs::join(sfConfig::get('dm_core_dir'), 'lib/core/dm.php');
-if($diemCoreStarter != ($relDiemCoreStarter = $this->filesystem->calculateRelativeDir(rtrim(sfConfig::get('sf_root_dir'), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR, $diemCoreStarter))){
-  $diemCoreStarter = sprintf('dirname(dirname(__FILE__)).DIRECTORY_SEPARATOR.%s', var_export($relDiemCoreStarter, true));
-}
-else{
-  $diemCoreStarter = var_export($diemCoreStarter, true);
-} 
-
 $this->replaceTokens(sfConfig::get('sf_config_dir'), array(
   'SYMFONY_CORE_AUTOLOAD' => $symfonyCoreAutoload,
-  'DIEM_CORE_STARTER'     => $diemCoreStarter,
+  'DIEM_CORE_STARTER'     => var_export(dmOs::join(sfConfig::get('dm_core_dir'), 'lib/core/dm.php'), true),
   'DIEM_WEB_DIR'          => "sfConfig::get('sf_root_dir').'/".$settings['web_dir_name']."'",
   'DIEM_CULTURE'          => var_export($settings['culture'], true),
   'SEND_REPORTS'          => var_export($sendReports, true)
